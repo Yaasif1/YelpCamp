@@ -24,8 +24,24 @@ const app = express();
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
+app.use(express.urlencoded({extended: true}))
+express.json()
+
+
 app.get('/', (req, res) => {
     res.render('home')
+})
+
+app.get('/campgrounds', async (req, res) => {
+    const allCamps = await Campground.find({})
+    res.render('campgrounds/index', {allCamps})
+})
+
+app.get('/campgrounds/:id', async (req, res) => {
+    const { id } = req.params
+    const campGround = await Campground.findById(id)
+    console.log(campGround)
+    res.render('campgrounds/show', {campGround})
 })
 
 app.get('/makecampground', async (req, res) => {
